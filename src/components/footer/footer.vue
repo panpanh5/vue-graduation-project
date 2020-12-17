@@ -1,10 +1,10 @@
 <template>
   <div>
-    <van-tabbar active="{{ active }}" v-bind:change="onChange">
-      <van-tabbar-item icon="home-o">标签</van-tabbar-item>
-      <van-tabbar-item icon="search">标签</van-tabbar-item>
-      <van-tabbar-item icon="friends-o">标签</van-tabbar-item>
-      <van-tabbar-item icon="setting-o">标签</van-tabbar-item>
+    <van-tabbar v-model="active">
+      <van-tabbar-item icon="home-o">首页</van-tabbar-item>
+      <van-tabbar-item icon="location-o">打卡</van-tabbar-item>
+      <van-tabbar-item icon="notes-o">作业</van-tabbar-item>
+      <van-tabbar-item icon="friends-o">我的</van-tabbar-item>
     </van-tabbar>
   </div>
 </template>
@@ -16,12 +16,8 @@ export default {
       active: 0,
     };
   },
-  onChange(event) {
-    // event.detail 的值为当前选中项的索引
-    this.setData({ active: event.detail });
-  },
+  methods: {},
 };
 </script>
 
-<style>
-</style>
+<style lang="scss" scoped></style>
