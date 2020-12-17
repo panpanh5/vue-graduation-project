@@ -1,6 +1,6 @@
 <template>
-  <div class="index">
-    index
+  <div class="location">
+    打卡利用高德Api获取位置信息
   </div>
 </template>
 

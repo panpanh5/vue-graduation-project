@@ -1,24 +1,54 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
 import Admin from '../views/admin/admin.vue'
+import Login from '../views/login/login'
+import Index from '../views/index.vue'
+import Location from '../views/location.vue'
+import My from '../views/my.vue'
+import Task from '../views/task.vue'
 
 Vue.use(VueRouter)
 
-const routes = [{
-        path: '/',
-        name: 'Admin',
-        component: Admin
+const routes = [
+    {
+        path: '',
+        redirect: '/login'
     },
     {
-        path: '/about',
-        name: 'About',
-        // route level code-splitting
-        // this generates a separate chunk (about.[hash].js) for this route
-        // which is lazy-loaded when the route is visited.
-        component: () =>
-            import ( /* webpackChunkName: "about" */ '../views/About.vue')
-    }
+        path: '/login',
+        component: Login,
+    },
+    {
+        path: '/admin',
+        component: Admin,
+        children: [
+            {
+                path: '',
+                redirect: 'index'
+            }, {
+                path: 'index',
+                name: '首页',
+                component: Index,
+            }, {
+                path: 'task',
+                name: '作业',
+                component: Task,
+            },
+            {
+                path: 'location',
+                name: '打卡',
+                component: Location,
+            }, {
+                path: 'my',
+                name: '我的',
+                component: My,
+            }]
+    },
+    {
+        path: '*',
+        component: Admin,
+    },
+
 ]
 
 const router = new VueRouter({
