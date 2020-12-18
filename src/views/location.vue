@@ -7,22 +7,22 @@
           weizhi
         </div>
       </div>
-      <div class="container">星期{{ currentTime.week }} 打卡</div>
+      <div class="container">{{ currentTime | date() }} 打卡</div>
     </div>
   </div>
 </template>
 
 <script>
+import format from "../filter/filter";
 export default {
   data() {
     return {
       // 可以自定义管道操作符来处理
-      currentTime: {
-        week: new Date().getDay(),
-        time: "",
-        month: new Date().getMonth() + 1,
-      },
+      currentTime: new Date(),
     };
+  },
+  filters: {
+    date: new format().formatDate,
   },
   methods: {
     getTime() {
