@@ -30,9 +30,14 @@ export default {
   data() {
     return {
       active: 0,
+  
     };
   },
-  methods: {},
+ 
+  methods: {
+    
+    
+  },
 };
 </script>
 
