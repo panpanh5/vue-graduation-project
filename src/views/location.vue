@@ -3,69 +3,65 @@
     <div>
       <div class="header">
         当前打卡位置:
-        <div>weizhi</div>
+        <div>{{ location }}</div>
       </div>
-      <div class="container">星期{{ currentTime.week }} 打卡</div>
+      <div class="container">{{ currentTime | date() }} 打卡</div>
     </div>
   </div>
 </template>
 
 <script>
-import AMap from "AMap";
+// import AMap from "AMap";
+import format from "../filter/filter";
+// import Toast from "path/to/@vant/weapp/dist/toast/toast";
 export default {
   data() {
     return {
       // 可以自定义管道操作符来处理
-      currentTime: {
-        week: new Date().getDay(),
-        time: "",
-        month: new Date().getMonth() + 1,
-      },
-      // 高德地图获取当前位置
-      location: "",
-      lat: 0,
-      lng: 0,
+      currentTime: new Date(),
+      location: "加载中请稍后!",
+      AMap,
     };
   },
+  filters: {
+    date: new format().formatDate,
+  },
   mounted() {
-    this.getLocation(); // 调用获取地理位置
+    this.initMap();
   },
   methods: {
     getTime() {
       console.log(new Date());
     },
-
-    /** 获取高德地图定位 */
-    // 获取当前定位
-    getLocation() {
-      let that = this;
-      var map = new AMap.Map("container", {
-        resizeEnable: true,
-      });
-      AMap.plugin("AMap.Geolocation", function () {
-        var geolocation = new AMap.Geolocation({
+    initMap() {
+      let that=this;
+      let mapObj = new AMap.Map("iCenter");
+      mapObj.plugin("AMap.Geolocation", function () {
+        let geolocation = new AMap.Geolocation({
           enableHighAccuracy: true, //是否使用高精度定位，默认:true
-          timeout: 10000, //超过10秒后停止定位，默认：5s
-          buttonPosition: "RB", //定位按钮的停靠位置
+          timeout: 10000, //超过10秒后停止定位，默认：无穷大
+          maximumAge: 0, //定位结果缓存0毫秒，默认：0
+          convert: true, //自动偏移坐标，偏移后的坐标为高德坐标，默认：true
+          showButton: true, //显示定位按钮，默认：true
+          buttonPosition: "LB", //定位按钮停靠位置，默认：'LB'，左下角
           buttonOffset: new AMap.Pixel(10, 20), //定位按钮与设置的停靠位置的偏移量，默认：Pixel(10, 20)
-          zoomToAccuracy: true, //定位成功后是否自动调整地图视野到定位点
+          showMarker: true, //定位成功后在定位到的位置显示点标记，默认：true
+          showCircle: true, //定位成功后用圆圈表示定位精度范围，默认：true
+          panToLocation: true, //定位成功后将定位到的位置作为地图中心点，默认：true
+          zoomToAccuracy: true, //定位成功后调整地图视野范围使定位位置及精度范围视野内可见，默认：false
         });
-        geolocation.getCurrentPosition(function (status, result) {
-          if (status == "complete") {
-            that.onComplete(result);
-          } else {
-            that.onError(result);
-          }
-        });
+        mapObj.addControl(geolocation);
+        geolocation.getCurrentPosition();
+
+        AMap.event.addListener(geolocation, "complete", (data) => {
+          that.location = data.formattedAddress;
+
+          // this.location = loc;
+        }); //返回定位信息
+        AMap.event.addListener(geolocation, "error", (result) => {
+          // Toast.fail("获取位置失败!");
+        }); //返回定位出错信息
       });
-    },
-    //解析定位结果
-    onComplete(data) {
-      this.signAddress = data.formattedAddress;
-    },
-    //解析定位错误信息
-    onError(data) {
-      console.log("定位失败:" + data.message);
     },
   },
 };
