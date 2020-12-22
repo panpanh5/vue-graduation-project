@@ -2,7 +2,7 @@
   <div class="admin">
     <!-- 头部 -->
     <keep-alive>
-      <Header class="header"></Header>
+      <Header class="header" :header-title="headerTitle"></Header>
     </keep-alive>
 
     <!-- 中间显示 -->
@@ -11,7 +11,7 @@
     </div>
     <!-- 底部固定 -->
     <keep-alive>
-      <Footer class="footer"></Footer>
+      <Footer class="footer" @footer-active="footerActive"></Footer>
     </keep-alive>
   </div>
 </template>
@@ -20,10 +20,27 @@
 import footer from "../../components/footer/footer";
 import header from "../../components/header/header";
 export default {
+  data() {
+    return {
+      headerTitle: {
+        active: 0,
+        name: "首页",
+      },
+    };
+  },
   // 注册组件
   components: {
     Header: header,
     Footer: footer,
+  },
+  methods: {
+    footerActive(data) {
+      console.log(data.active, data.name);
+      this.headerTitle = {
+        active: data.active,
+        name: data.name,
+      };
+    },
   },
 };
 </script>

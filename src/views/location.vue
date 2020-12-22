@@ -13,7 +13,8 @@
 <script>
 // import AMap from "AMap";
 import format from "../filter/filter";
-// import Toast from "path/to/@vant/weapp/dist/toast/toast";
+import { Toast } from "vant";
+
 export default {
   data() {
     return {
@@ -34,9 +35,9 @@ export default {
       console.log(new Date());
     },
     initMap() {
-      let that=this;
+      let that = this;
       let mapObj = new AMap.Map("iCenter");
-      mapObj.plugin("AMap.Geolocation", function () {
+      mapObj.plugin("AMap.Geolocation", function() {
         let geolocation = new AMap.Geolocation({
           enableHighAccuracy: true, //是否使用高精度定位，默认:true
           timeout: 10000, //超过10秒后停止定位，默认：无穷大
@@ -55,11 +56,10 @@ export default {
 
         AMap.event.addListener(geolocation, "complete", (data) => {
           that.location = data.formattedAddress;
-
           // this.location = loc;
         }); //返回定位信息
         AMap.event.addListener(geolocation, "error", (result) => {
-          // Toast.fail("获取位置失败!");
+          Toast.fail(`${result.message}`);
         }); //返回定位出错信息
       });
     },

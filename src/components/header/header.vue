@@ -1,11 +1,12 @@
 <template>
   <div class="header">
-    <van-nav-bar title="标题" />
+    <van-nav-bar :title="headerTitle.name" />
   </div>
 </template>
 
 <script>
 export default {
+  props: ["headerTitle"],
   methods: {},
 };
 </script>

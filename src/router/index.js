@@ -6,6 +6,7 @@ import Index from '../views/index.vue'
 import Location from '../views/location.vue'
 import My from '../views/my.vue'
 import Task from '../views/task.vue'
+import submitTask from '../views/submitTask.vue'
 
 Vue.use(VueRouter)
 
@@ -38,11 +39,16 @@ const routes = [
                 path: 'location',
                 name: '打卡',
                 component: Location,
-            }, {
+            },
+            {
                 path: 'my',
                 name: '我的',
                 component: My,
             }]
+    },
+    {
+        path: '/submit:id',
+        component: submitTask
     },
     {
         path: '*',
