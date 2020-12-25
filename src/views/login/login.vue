@@ -44,6 +44,8 @@
 
 <script>
 import * as CryptoJS from "crypto-js/crypto-js";
+import axios from "axios";
+
 export default {
   data() {
     return {
@@ -61,8 +63,13 @@ export default {
   methods: {
     login() {
       console.log(this.loginPar);
+      let data = this.encryptByDESModeCBC(this.loginPar);
+
       this.$router.push("/admin");
     },
+    /**
+     * 操作显示隐藏密码
+     */
     showPassword() {
       this.password.visible = !this.password.visible;
       if (this.password.visible) {
@@ -73,6 +80,58 @@ export default {
         this.password.icon = "closed-eye";
       }
       console.log(this.passwordVisible);
+    },
+    /**
+     * CBC模式
+     * @param data 加密内容
+     */
+    encryptByDESModeCBC(data) {
+      data = `${data.username.trim()}:${data.password}`;
+      const keyHex = CryptoJS.enc.Utf8.parse(
+        "pandesign"
+        // environment.config.AppSettings.NB_NETWORK_CONFIG_DESKey
+      );
+      const ivHex = CryptoJS.enc.Utf8.parse(
+        "pandesign"
+        // environment.config.AppSettings.NB_NETWORK_CONFIG_DESKey
+      );
+      const encrypted = CryptoJS.DES.encrypt(data, keyHex, {
+        iv: ivHex,
+        mode: CryptoJS.mode.CBC,
+        padding: CryptoJS.pad.Pkcs7,
+      });
+      //   尝试解密---解密出来数值没有变化
+      const decrypt = this.decryptByDESModeCBC(encrypted.ciphertext.toString());
+      console.log(decrypt);
+
+      return encrypted.ciphertext.toString();
+    },
+    /**
+     * CBC模式
+     * @param ciphertext2 解密内容
+     */
+    decryptByDESModeCBC(ciphertext2) {
+      const keyHex = CryptoJS.enc.Utf8.parse(
+        "pandesign"
+        // environment.config.AppSettings.NB_NETWORK_CONFIG_DESKey
+      );
+      const ivHex = CryptoJS.enc.Utf8.parse(
+        "pandesign"
+        // environment.config.AppSettings.NB_NETWORK_CONFIG_DESKey
+      );
+      // direct decrypt ciphertext
+      const decrypted = CryptoJS.DES.decrypt(
+        {
+          ciphertext: CryptoJS.enc.Hex.parse(ciphertext2),
+        },
+        keyHex,
+        {
+          iv: ivHex,
+          mode: CryptoJS.mode.CBC,
+          padding: CryptoJS.pad.Pkcs7,
+        }
+      );
+      return decrypted.toString(CryptoJS.enc.Utf8);
     },
   },
 };
